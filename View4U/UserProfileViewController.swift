@@ -1,13 +1,13 @@
 //
-//  RegisterViewController.swift
+//  UserProfileViewController.swift
 //  View4U
 //
-//  Created by admin on 06/07/2021.
+//  Created by admin on 07/07/2021.
 //
 
 import UIKit
 
-class RegisterViewController: UIViewController {
+class UserProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,15 +26,4 @@ class RegisterViewController: UIViewController {
     }
     */
 
-
-
-//    @IBAction func goBack(_ sender: Any) {
-    // exit the screen
-    //        dismiss(animated: true, completion: nil)
-//    }
-    
-    
-    @IBAction func onTapView(_ sender: Any) {
-        self.view.endEditing(true)
-    }
 }
