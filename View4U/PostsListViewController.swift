@@ -42,7 +42,11 @@ class PostsListViewController: UIViewController, UITableViewDataSource,UITableVi
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = postsTableView.dequeueReusableCell(withIdentifier: "postsListRow", for: indexPath)
+        let cell = postsTableView.dequeueReusableCell(withIdentifier: "postsListRow", for: indexPath) as! PostsTableViewCell
+        
+        cell.locationName_OutletBtn.setTitle("My location", for: .normal)
+        cell.textView.insertText("Description text will be here...")
+        
         
         return cell
     }
