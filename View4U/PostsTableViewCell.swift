@@ -9,14 +9,10 @@ import UIKit
 
 class PostsTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var locationName_OutletBtn: UIButton!
+    
+    @IBOutlet weak var locationTitleLebal: UILabel!
     @IBOutlet weak var postImg: UIImageView!
     @IBOutlet weak var textView: UITextView!
-    
-    
-    @IBAction func locationName_btn(_ sender: Any) {
-    }
-    
     
     
     
