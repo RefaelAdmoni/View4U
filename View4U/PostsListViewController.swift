@@ -9,20 +9,39 @@ import UIKit
 
 class PostsListViewController: UIViewController, UITableViewDataSource,UITableViewDelegate /*, MyCustomSegueSourceDelegate*/ {
     @IBOutlet weak var postsTableView: UITableView!
-        
+    @IBOutlet weak var tableView: UITableView!
+    //getting the storyboard
+    let sb = UIStoryboard(name:"Main", bundle: nil)
 
-    var data = [1,2,3,4,5,6,7,8,9]
+    @IBOutlet weak var trash: UIBarButtonItem!
+    @IBOutlet weak var toolBar: UINavigationItem!
+    @IBOutlet weak var signinBtn: UIBarButtonItem!
+    @IBOutlet weak var profileBtn: UIBarButtonItem!
+    @IBOutlet weak var addReco: UIBarButtonItem!
     
+    
+    var postData = [Post]()
+    var userData = [User] ()
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
-
-        
+        toolBar.setRightBarButtonItems([signinBtn], animated: true)
+        toolBar.setLeftBarButtonItems([addReco], animated: true)
     }
     
+    //this func works when this view is show up. (always!)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        postData = Model.instance.getAllPosts()
+//        userData = Model.instance.getAllUsers()
+        
+        //update data
+        tableView.reloadData()
+        
+        
+    }
     
     
     var editingFlag = false
@@ -35,7 +54,7 @@ class PostsListViewController: UIViewController, UITableViewDataSource,UITableVi
     
     /*UITableViewDelegate protocol */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return postData.count
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -43,11 +62,16 @@ class PostsListViewController: UIViewController, UITableViewDataSource,UITableVi
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+      
         let cell = postsTableView.dequeueReusableCell(withIdentifier: "postsListRow", for: indexPath) as! PostsTableViewCell
         
-        cell.locationTitleLebal.text = "location view no. " + String(indexPath.row)
-        cell.textView.insertText("Description text will be here...")
-        cell.textView.setMarkedText("Description text will write HERE ! ", selectedRange: .init())
+        let post = postData[indexPath.row]
+        
+        cell.locationTitleLebal.text = post.placeName
+//        cell.textView.text = post.description
+//        cell.postImg. = post.imageUrl
+        cell.location.text = post.location
+        cell.recommender.text = post.recommenderId
         
         return cell
     }
@@ -57,8 +81,6 @@ class PostsListViewController: UIViewController, UITableViewDataSource,UITableVi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         print("The cell \(indexPath) was selected! \n")
         
-        //getting the storyboard
-        let sb = UIStoryboard(name:"Main", bundle: nil)
         //get the next View Controller from the storyboard
         let nextVC = sb.instantiateViewController(identifier: "DetailsPlaceViewController") as! DetailsPlaceViewController
 
@@ -75,7 +97,7 @@ class PostsListViewController: UIViewController, UITableViewDataSource,UITableVi
         
         nextVC.placeEdite = cell.locationTitleLebal.text!;
         nextVC.myImg = cell.postImg.image
-        nextVC.descriptionView = cell.textView.text!
+//        nextVC.descriptionView = cell.textView.text!
         nextVC.location = "Somewhere..."
         nextVC.creatorName = "Rafii"
 
@@ -95,7 +117,10 @@ class PostsListViewController: UIViewController, UITableViewDataSource,UITableVi
     /*func - delete the choosen row by the user */
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            data.remove(at: indexPath[1])
+            let post = postData[indexPath.row]
+            Model.instance.delete(post: post)
+            postData.remove(at: indexPath.row)
+            
             //Delete the row from the database
             postsTableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
@@ -105,6 +130,32 @@ class PostsListViewController: UIViewController, UITableViewDataSource,UITableVi
     }
     
     
+    @IBAction func goToAddReview(_ sender: Any) {
+        
+        //get the next View Controller from the storyboard
+        let nextVC = sb.instantiateViewController(identifier: "AddReviewViewController") as! AddReviewViewController
+        
+        present(nextVC, animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func goToSignIn(_ sender: Any) {
+
+        //get the next View Controller from the storyboard
+        let nextVC = sb.instantiateViewController(identifier: "LoginViewController")
+//        //create the new window - get optional object
+//        let win = UIApplication.shared.windows.filter{$0.isKeyWindow}.first
+//        win?.rootViewController = nextVC
+//
+        present(nextVC, animated: true, completion: nil)
+    }
+    
+    @IBAction func goToMyProfile(_ sender: Any) {
+        //get the next View Controller from the storyboard
+        let nextVC = sb.instantiateViewController(identifier: "UserProfileViewController")
+        
+        present(nextVC, animated: true, completion: nil)
+    }
 }
 
 //protocol MyCustomSegueSourceDelegate {

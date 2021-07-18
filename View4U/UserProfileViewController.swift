@@ -25,5 +25,8 @@ class UserProfileViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    @IBAction func backToTheList(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
 }

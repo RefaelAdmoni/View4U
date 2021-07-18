@@ -9,6 +9,10 @@ import UIKit
 
 class RegisterViewController: UIViewController {
 
+    @IBOutlet weak var userName: UITextField!
+    @IBOutlet weak var userEmail: UITextField!
+    @IBOutlet weak var userPassword: UITextField!
+  
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -16,23 +20,23 @@ class RegisterViewController: UIViewController {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-
-
-//    @IBAction func goBack(_ sender: Any) {
-    // exit the screen
-    //        dismiss(animated: true, completion: nil)
-//    }
     
+    @IBAction func register(_ sender: Any) {
+        let user = User()
+        user.name = userName.text
+        user.email = userEmail.text
+        user.password = userPassword.text
+        
+        //add Image
+        
+        Model.instance.add(user: user)
+        navigationController?.popViewController(animated: true)
+    }
+    
+    
+    @IBAction func Back(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
     
     @IBAction func onTapView(_ sender: Any) {
         self.view.endEditing(true)

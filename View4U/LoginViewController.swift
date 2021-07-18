@@ -38,6 +38,9 @@ class LoginViewController: UIViewController {
     }
     
     
+    @IBAction func Login(_ sender: Any) {
+        
+    }
     
     @IBAction func goBack(_ sender: Any) {
         dismiss(animated: true, completion: nil)
@@ -46,7 +49,4 @@ class LoginViewController: UIViewController {
         self.view.endEditing(true)
     }
     
-    @IBAction func backToLogin(segue:UIStoryboardSegue){
-        print("backToLogin")
-    }
 }
