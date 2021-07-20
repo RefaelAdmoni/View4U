@@ -27,7 +27,7 @@ class AddReviewViewController: UIViewController {
     @IBAction func save(_ sender: Any) {
         let post = Post()
         post.placeName = placeName.text
-        post.description = desc.text!
+        post.descriptionPlace = desc.text!
         post.location = location.text
 //        post.recommenderId = Rafi
         

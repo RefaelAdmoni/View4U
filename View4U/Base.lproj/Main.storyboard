@@ -64,7 +64,7 @@
         <!--Login View Controller-->
         <scene sceneID="FmE-Qb-0Oz">
             <objects>
-                <viewController storyboardIdentifier="LoginViewController" id="Gde-Hf-oDL" customClass="LoginViewController" customModule="View4U" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" modalPresentationStyle="fullScreen" id="Gde-Hf-oDL" customClass="LoginViewController" customModule="View4U" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LzO-lR-GAw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
