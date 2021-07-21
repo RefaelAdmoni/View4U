@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PostsListViewController: UIViewController, UITableViewDelegate /*, MyCustomSegueSourceDelegate*/ {
+class PostsListViewController: UIViewController {
     @IBOutlet weak var postsTableView: UITableView!
     @IBOutlet weak var tableView: UITableView!
     //getting the storyboard
@@ -103,12 +103,10 @@ extension PostsListViewController: UITableViewDataSource{
         nextVC.creatorName = "Rafii"
 
         
-
-        
-        
-        
-        
     }
+}
+    
+    extension PostsListViewController: UITableViewDelegate{
     
     /*Checked to editing row in tableView */
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -158,23 +156,3 @@ extension PostsListViewController: UITableViewDataSource{
         present(nextVC, animated: true, completion: nil)
     }
 }
-
-//protocol MyCustomSegueSourceDelegate {
-//    func getViewContainer(forIndentifier:String)->UIView
-//}
-//
-//
-//class MyCustomSegue: UIStoryboardSegue {
-//    override func perform() {
-//        source.addChild(destination)
-//        let parent = source as! MyCustomSegueSourceDelegate
-//
-//        let container = parent.getViewContainer(forIndentifier: identifier ?? "")
-//        destination.view.frame = container.frame
-//
-//        destination.view.frame.origin = CGPoint(x: 10, y: 10)
-//        container.addSubview(destination.view)
-//
-//
-//    }
-//}
