@@ -56,6 +56,7 @@ class Model{
     }
     
     func add(post:Post){
+        let context = (UIApplication.shared.delegate as! AppDelegate)
         posts.append(post)
     }
     
