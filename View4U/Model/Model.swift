@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class Model{
     static let instance = Model()
@@ -13,10 +14,17 @@ class Model{
     private init(){}
     var users = [User]()
     var posts = [Post]()
-    
+
+   
     //user..
     func getAllUsers()->[User]{
-        return users
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        do{
+            let users = try context.fetch(User.fetchRequest()) as! [User]
+            
+            return users
+       
+        } catch {    return [User]()    }
     }
     
     func add(user:User){
@@ -36,10 +44,15 @@ class Model{
     
     
     
-    
     // post..
     func getAllPosts()->[Post]{
-        return posts
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        do{
+            let posts = try context.fetch(Post.fetchRequest()) as! [Post]
+            
+            return posts
+       
+        } catch {    return [Post]()    }
     }
     
     func add(post:Post){

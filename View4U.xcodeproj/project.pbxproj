@@ -105,8 +105,8 @@
 		8425924F26A2E3F800C4BE3A /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				84D15BA926A81B86006356F2 /* User+CoreDataProperties.swift */,
 				84D15BA826A81B86006356F2 /* User+CoreDataClass.swift */,
+				84D15BA926A81B86006356F2 /* User+CoreDataProperties.swift */,
 				84D15BA126A723CF006356F2 /* Post+CoreDataClass.swift */,
 				84D15BA226A723CF006356F2 /* Post+CoreDataProperties.swift */,
 				84D15B5026A6E82E006356F2 /* DataModel.xcdatamodeld */,
