@@ -25,7 +25,7 @@ class RegisterViewController: UIViewController {
         let user = User()
         user.name = userName.text
         user.email = userEmail.text
-        user.password = userPassword.text
+//        user.password = userPassword.text
         
         //add Image
         

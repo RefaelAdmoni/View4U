@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PostsListViewController: UIViewController, UITableViewDataSource,UITableViewDelegate /*, MyCustomSegueSourceDelegate*/ {
+class PostsListViewController: UIViewController, UITableViewDelegate /*, MyCustomSegueSourceDelegate*/ {
     @IBOutlet weak var postsTableView: UITableView!
     @IBOutlet weak var tableView: UITableView!
     //getting the storyboard
@@ -49,8 +49,9 @@ class PostsListViewController: UIViewController, UITableViewDataSource,UITableVi
         editingFlag = !editingFlag
         postsTableView.setEditing(editingFlag, animated: true)
     }
-    
-    
+}
+
+extension PostsListViewController: UITableViewDataSource{
     
     /*UITableViewDelegate protocol */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
