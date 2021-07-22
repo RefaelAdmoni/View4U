@@ -21,6 +21,8 @@ public class Post: NSManagedObject {
         post.descriptionPlace = description
         post.imageUrl = imgUrl
         post.recommenderId = recommender
+        post.date = Date()
+        
         
         return post
     }

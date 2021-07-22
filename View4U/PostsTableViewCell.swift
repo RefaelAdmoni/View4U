@@ -14,6 +14,7 @@ class PostsTableViewCell: UITableViewCell {
     @IBOutlet weak var postImg: UIImageView!
     @IBOutlet weak var location: UILabel!
     @IBOutlet weak var recommender: UILabel!
+    @IBOutlet weak var publishedDate: UILabel!
     
     
     

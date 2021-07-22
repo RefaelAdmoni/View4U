@@ -27,18 +27,20 @@ class PostsListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         toolBar.setRightBarButtonItems([signinBtn], animated: true)
-        toolBar.setLeftBarButtonItems([addReco], animated: true)
+        toolBar.setLeftBarButtonItems([addReco,trash], animated: true)
     }
     
     //this func works when this view is show up. (always!)
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        postData = Model.instance.getAllPosts()
+        Model.instance.getAllPosts{ posts in self.postData = posts
+            self.tableView.reloadData()
+        }
 //        userData = Model.instance.getAllUsers()
         
         //update data
-        tableView.reloadData()
+//        tableView.reloadData()
         
         
     }
@@ -73,7 +75,9 @@ extension PostsListViewController: UITableViewDataSource{
 //        cell.postImg. = post.imageUrl
         cell.location.text = post.location
         cell.recommender.text = post.recommenderId
+        cell.publishedDate.text = stringFromDate(post.date! )
         
+        print(stringFromDate(post.date!))
         return cell
     }
     
@@ -155,4 +159,11 @@ extension PostsListViewController: UITableViewDataSource{
         
         present(nextVC, animated: true, completion: nil)
     }
+        
+        
+        func stringFromDate(_ date: Date) -> String {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM/yy HH:mm"
+            return formatter.string(from: date)
+        }
 }

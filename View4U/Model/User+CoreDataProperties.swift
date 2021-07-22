@@ -16,6 +16,7 @@ extension User {
         return NSFetchRequest<User>(entityName: "User")
     }
 
+    @NSManaged public var id: String?
     @NSManaged public var imageUrl: String?
     @NSManaged public var name: String?
     @NSManaged public var email: String?

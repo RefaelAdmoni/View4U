@@ -19,6 +19,7 @@ extension Post {
     @NSManaged public var placeName: String?
     @NSManaged public var location: String?
     @NSManaged public var descriptionPlace: String?
+    @NSManaged public var date: Date?
     @NSManaged public var imageUrl: String?
     @NSManaged public var recommenderId: String?
 

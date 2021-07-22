@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class Model{
     static let instance = Model()
@@ -44,17 +45,43 @@ class Model{
     }
     
     
+    func getUser(byName: String)->User?{
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        let request = User.fetchRequest() as NSFetchRequest<User>
+        request.predicate = NSPredicate(format: "name == \(byName)")
+        do{
+            let users = try context.fetch(request)
+            if users.count > 0 {
+                return users[0]
+            }
+        }catch{    }
+        
+        return User()
+    }
+    
     
     // post..
-    func getAllPosts()->[Post]{
+    func getAllPosts(callback:@escaping ([Post])->Void) {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        do{
-            let posts = try context.fetch(Post.fetchRequest()) as! [Post]
+        let request = Post.fetchRequest() as NSFetchRequest<Post>
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "date",ascending: false)]
+        
+        DispatchQueue.global().async {
+            //second thread code
+            var data = [Post]()
+            do{
+                data = try context.fetch(request)
+            } catch {  }
             
-            return posts
-       
-        } catch {    return [Post]()    }
+            DispatchQueue.main.async {
+                //code to execute on main thread
+                callback(data)
+            }
+        }
     }
+    
     
     func add(post:Post){
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -69,5 +96,20 @@ class Model{
         do{
             try context.save()
         }catch{    }
+    }
+    
+    func getPost(byName: String)->Post?{
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        let request = Post.fetchRequest() as NSFetchRequest<Post>
+        request.predicate = NSPredicate(format: "name == \(byName)")
+        do{
+            let posts = try context.fetch(request)
+            if posts.count > 0 {
+                return posts[0]
+            }
+        }catch{    }
+        
+        return Post()
     }
 }
