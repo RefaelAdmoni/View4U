@@ -23,7 +23,7 @@ class RegisterViewController: UIViewController {
 
     
     @IBAction func register(_ sender: Any) {
-        let user = User()
+        let user = User.create(name: userName.text!, email: userEmail.text!, imgUrl: "")
         user.name = userName.text
         user.email = userEmail.text
 //        user.password = userPassword.text

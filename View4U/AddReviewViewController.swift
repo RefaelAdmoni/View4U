@@ -25,10 +25,10 @@ class AddReviewViewController: UIViewController {
 
 
     @IBAction func save(_ sender: Any) {
-        let post = Post()
-        post.placeName = placeName.text
+        let post = Post.create(name: placeName.text!, location: location.text!, description: desc.text!, imgUrl: "", recommender: "Rafiii...")
+        post.placeName = placeName.text!
         post.descriptionPlace = desc.text!
-        post.location = location.text
+        post.location = location.text!
 //        post.recommenderId = Rafi
         
         Model.instance.add(post: post)

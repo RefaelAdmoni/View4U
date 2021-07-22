@@ -28,18 +28,19 @@ class Model{
     }
     
     func add(user:User){
-        users.append(user)
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        do{
+            try context.save()
+        }catch{    }
     }
     
     func delete(user:User){
-        var i = 0
-        for u in users{
-            if u.id == user.id {
-                users.remove(at: i)
-                return
-            }
-            i = i+1
-        }
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        context.delete(user)
+        do{
+            try context.save()
+        }catch{    }
+        
     }
     
     
@@ -56,18 +57,17 @@ class Model{
     }
     
     func add(post:Post){
-        let context = (UIApplication.shared.delegate as! AppDelegate)
-        posts.append(post)
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        do{
+            try context.save()
+        }catch{    }
     }
     
     func delete(post:Post){
-        var i = 0
-        for p in posts{
-            if p.id == post.id {
-                posts.remove(at: i)
-                return
-            }
-            i = i+1
-        }
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        context.delete(post)
+        do{
+            try context.save()
+        }catch{    }
     }
 }
