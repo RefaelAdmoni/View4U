@@ -22,5 +22,50 @@ public class User: NSManagedObject {
         
         return user
     }
+}
 
+
+extension User{
+    
+    static func getAll()->[User]{
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        do{
+            let users = try context.fetch(User.fetchRequest()) as! [User]
+            
+            return users
+       
+        } catch {    return [User]()    }
+    }
+    
+    func save(){
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        do{
+            try context.save()
+        }catch{    }
+    }
+    
+    func delete(){
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        context.delete(self)
+        do{
+            try context.save()
+        }catch{    }
+        
+    }
+    
+    
+    static func getUser(byName: String)->User?{
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        let request = User.fetchRequest() as NSFetchRequest<User>
+        request.predicate = NSPredicate(format: "name == \(byName)")
+        do{
+            let users = try context.fetch(request)
+            if users.count > 0 {
+                return users[0]
+            }
+        }catch{    }
+        
+        return nil
+    }
 }
