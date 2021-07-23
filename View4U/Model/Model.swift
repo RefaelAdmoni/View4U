@@ -14,6 +14,9 @@ class Model{
     
     private init(){}
    
+    let modelFirebase = ModelFirebase()
+    
+    
     //user..
     func getAllUsers(callback:@escaping ([User])->Void){
 
