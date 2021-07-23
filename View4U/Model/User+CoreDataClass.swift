@@ -24,7 +24,12 @@ public class User: NSManagedObject {
     }
     
     static func create(json:[String:Any]) -> User?{
-        return nil
+        let user = User()
+        user.name = json["name"] as? String
+        user.email = json["email"] as? String
+        user.imageUrl = json["imgUrl"] as? String
+        
+        return user
     }
     
     func toJson()->[String:Any]{

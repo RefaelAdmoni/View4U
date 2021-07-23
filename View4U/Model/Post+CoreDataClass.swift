@@ -28,7 +28,15 @@ public class Post: NSManagedObject {
     }
     
     static func create(json:[String:Any]) -> Post?{
-        return nil
+        let post = Post()
+        post.placeName = json["name"] as? String
+        post.location = json["location"] as? String
+        post.descriptionPlace = json["description"] as? String
+        post.imageUrl = json["imgUrl"] as? String
+        post.recommenderId = json["recommender"] as? String
+        post.date = json["date"] as? Date
+        
+        return post
     }
     
     func toJson()->[String:Any]{

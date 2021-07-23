@@ -23,12 +23,15 @@ class ModelFirebase {
             if let snapshot = snapshot{
                 var posts = [Post]()
                 for snap in snapshot.documents{
-                    let p = Post.create(json:snap.data())
-                    posts.append(p!)
+                    if let p = Post.create(json:snap.data()){
+                    posts.append(p)
+                    }
                 }
                 callback(posts)
+                return
             }
             }
+            callback([Post]())
         }
     }
     
