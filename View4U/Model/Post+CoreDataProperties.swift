@@ -1,8 +1,8 @@
 //
 //  Post+CoreDataProperties.swift
-//  View4U
+//  
 //
-//  Created by admin on 20/07/2021.
+//  Created by admin on 24/07/2021.
 //
 //
 
@@ -16,15 +16,13 @@ extension Post {
         return NSFetchRequest<Post>(entityName: "Post")
     }
 
-    @NSManaged public var placeName: String?
-    @NSManaged public var location: String?
-    @NSManaged public var descriptionPlace: String?
     @NSManaged public var date: Date?
+    @NSManaged public var descriptionPlace: String?
+    @NSManaged public var id: String?
     @NSManaged public var imageUrl: String?
+    @NSManaged public var location: String?
+    @NSManaged public var placeName: String?
     @NSManaged public var recommenderId: String?
-
-}
-
-extension Post : Identifiable {
+    @NSManaged public var lastUpdated: Int64
 
 }

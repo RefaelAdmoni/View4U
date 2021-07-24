@@ -9,6 +9,7 @@ import UIKit
 
 class PostsTableViewCell: UITableViewCell {
 
+    var post = Post()
     
     @IBOutlet weak var locationTitleLebal: UILabel!
     @IBOutlet weak var postImg: UIImageView!

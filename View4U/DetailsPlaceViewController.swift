@@ -9,6 +9,7 @@ import UIKit
 
 class DetailsPlaceViewController: UIViewController {
 
+    
     @IBOutlet weak var placeTitle: UILabel!
     @IBOutlet weak var imagePlace: UIImageView!
     @IBOutlet weak var descriptionPlace: UITextView!

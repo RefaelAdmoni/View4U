@@ -22,21 +22,44 @@ class PostsListViewController: UIViewController {
     
     var postData = [Post]()
     var userData = [User] ()
-
+    var refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        toolBar.setRightBarButtonItems([signinBtn], animated: true)
-        toolBar.setLeftBarButtonItems([addReco,trash], animated: true)
+        toolBar.setRightBarButtonItems([signinBtn, profileBtn], animated: true)
+        toolBar.setLeftBarButtonItems([addReco, trash], animated: true)
+        
+        //getiing all posts
+        tableView.addSubview(refreshControl)
+        
+        //catching slide down by user.
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        reloadData()
+        
+        //Listener to notify
+        Model.instance.notificationPostList.observe {
+            self.reloadData()	
+        }
+        
+    }
+    @objc func refresh(_ sender:AnyObject){
+        self.reloadData()
+    }
+    
+    func reloadData() {
+        refreshControl.beginRefreshing()
+        Model.instance.getAllPosts{
+            posts in self.postData = posts
+            self.tableView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
     }
     
     //this func works when this view is show up. (always!)
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        Model.instance.getAllPosts{ posts in self.postData = posts
-            self.tableView.reloadData()
-        }
+
 //        userData = Model.instance.getAllUsers()
         
         //update data
@@ -70,14 +93,16 @@ extension PostsListViewController: UITableViewDataSource{
         
         let post = postData[indexPath.row]
         
+        cell.post = post
+        
         cell.locationTitleLebal.text = post.placeName
-//        cell.textView.text = post.description
-//        cell.postImg. = post.imageUrl
+
+//        cell.postImg = post.imageUrl
         cell.location.text = post.location
         cell.recommender.text = post.recommenderId
-        cell.publishedDate.text = stringFromDate(post.date! )
+        cell.publishedDate.text = stringFromDate(post.date ?? Date() )
         
-        print(stringFromDate(post.date!))
+        print(stringFromDate(post.date ?? Date()))
         return cell
     }
     
@@ -91,7 +116,6 @@ extension PostsListViewController: UITableViewDataSource{
 
         let cell = tableView.cellForRow(at: indexPath) as! PostsTableViewCell
 
-        
         present(nextVC, animated: true, completion: nil)
         
         
@@ -102,8 +126,9 @@ extension PostsListViewController: UITableViewDataSource{
         
         nextVC.placeEdite = cell.locationTitleLebal.text!;
         nextVC.myImg = cell.postImg.image
-//        nextVC.descriptionView = cell.textView.text!
-        nextVC.location = "Somewhere..."
+        nextVC.descriptionView.removeAll()
+        nextVC.descriptionView = cell.post.descriptionPlace!
+        nextVC.location = cell.location.text!
         nextVC.creatorName = "Rafii"
 
         

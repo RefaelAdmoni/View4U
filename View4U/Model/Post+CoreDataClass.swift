@@ -9,11 +9,13 @@
 import Foundation
 import UIKit
 import CoreData
+import Firebase
+import FirebaseFirestore
 
 @objc(Post)
 public class Post: NSManagedObject {
 
-    static func create(name:String, location:String, description:String, imgUrl:String, recommender:String) -> Post{
+    static func create(name:String, location:String, description:String, imgUrl:String, recommender:String, lastUpdated:Int64 = 0) -> Post{
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let post = Post(context: context)
         post.placeName = name
@@ -28,12 +30,19 @@ public class Post: NSManagedObject {
     }
     
     static func create(json:[String:Any]) -> Post?{
-        let post = Post()
-        post.placeName = json["name"] as? String
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let post = Post(context: context)
+        
+        post.id = json["id"] as? String
+        post.placeName = json["placeName"] as? String
         post.location = json["location"] as? String
-        post.descriptionPlace = json["description"] as? String
+        post.descriptionPlace = json["descriptionPlace"] as? String
         post.imageUrl = json["imgUrl"] as? String
-        post.recommenderId = json["recommender"] as? String
+        post.recommenderId = json["recommenderId"] as? String
+        post.lastUpdated = 0
+        if let timestamp = json["lastUpdated"] as? Timestamp {
+            post.lastUpdated = timestamp.seconds
+        }
         post.date = json["date"] as? Date
         
         return post
@@ -46,11 +55,13 @@ public class Post: NSManagedObject {
         json["descriptionPlace"] = descriptionPlace!
         json["date"] = date!
         json["recommenderId"] = recommenderId!
+        json["id"] = id!
         if let imageUrl = imageUrl{
             json["imageUrl"] = imageUrl
         }else{
             json["imageUrl"] = ""
         }
+        json["lastUpdated"] = FieldValue.serverTimestamp()
         
         return json
     }
@@ -109,4 +120,14 @@ extension Post{
         
         return nil
     }
+    
+    
+    static func setLocalLastUpdate(localLastUpdate:Int64){
+        UserDefaults.standard.setValue(localLastUpdate, forKey: "PostsLastUpdateDate")
+    }
+    static func getLocalLastUpdate()->Int64{
+        return Int64(UserDefaults.standard.integer(forKey: "PostsLastUpdateDate"))
+    }
+    
+    
 }

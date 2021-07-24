@@ -7,14 +7,16 @@
 
 import UIKit
 
-class AddReviewViewController: UIViewController {
+class AddReviewViewController: UIViewController,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
   
     @IBOutlet weak var placeName: UITextField!
     @IBOutlet weak var desc: UITextView!
     @IBOutlet weak var location: UITextField!
+    @IBOutlet weak var imageView: UIImageView!
     //TODO: add recommender
     
+    var image: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,20 +24,28 @@ class AddReviewViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-
+    
+    
+    
 
     @IBAction func save(_ sender: Any) {
-        let post = Post.create(name: placeName.text!, location: location.text!, description: desc.text!, imgUrl: "", recommender: "Rafiii...")
+        if let image = image{
+            Model.instance.saveImage(image: image, type:"POST") { (url) in
+                self.savePost(url: url)
+            }
+        }else{
+            self.savePost(url: "")
+        }
         
-//        post.placeName = placeName.text!
-//        post.descriptionPlace = desc.text!
-//        post.location = location.text!
+    }
+    
+    func savePost(url: String){
+        let post = Post.create(name: placeName.text!, location: location.text!, description: desc.text!, imgUrl: url, recommender: "Rafiii...")
         
-//        post.recommenderId = Rafi
-        
-        Model.instance.add(post: post)
-//        navigationController?.popViewController(animated: true) //pop out this view.
-        dismiss(animated: true, completion: nil)
+        Model.instance.add(post: post){
+            self.navigationController?.popViewController(animated: true)
+        }
+//        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func close(_ sender: Any) {
@@ -45,4 +55,29 @@ class AddReviewViewController: UIViewController {
     @IBAction func onTapView(_ sender: Any) {
         self.view.endEditing(true)
     }
+    
+    
+    @IBAction func editImage(_ sender: Any) {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera){
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerController.SourceType.camera
+            imagePicker.allowsEditing = true
+            self.present(imagePicker, animated: true, completion: nil)
+        } else {
+                let imagePicker = UIImagePickerController()
+                imagePicker.delegate = self
+                imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary;
+                imagePicker.allowsEditing = true
+                self.present(imagePicker, animated: true, completion: nil)
+            }
+        }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
+        self.imageView.image = image
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
 }
