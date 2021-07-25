@@ -523,6 +523,10 @@
                                     <action selector="editImage:" destination="TBG-wV-ttg" eventType="touchUpInside" id="xUm-We-EZI"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="dQR-WN-d3c">
+                                <rect key="frame" x="192" y="753" width="30" height="28"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="x66-iv-fLq"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -541,6 +545,7 @@
                         <outlet property="imageView" destination="DVq-kZ-Sa3" id="P2a-0e-bDc"/>
                         <outlet property="location" destination="L6e-dI-mRb" id="PCH-pT-UjC"/>
                         <outlet property="placeName" destination="jJ6-Sm-yP1" id="Vc8-JL-r4s"/>
+                        <outlet property="spinerActivity" destination="dQR-WN-d3c" id="ZJS-IP-qMO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vvg-Lz-Xmc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

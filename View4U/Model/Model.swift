@@ -71,32 +71,44 @@ class Model{
         
         //get updates from firebase
         modelFirebase.getAllPosts(since: localLastUpdate){ (posts) in
+
             
+            //update the local last update date
+            for p in posts{
+                print("post last updated = \(p.lastUpdated)")
+                if (p.lastUpdated > localLastUpdate){
+                    localLastUpdate = p.lastUpdated
+                }
+            }
+            Post.setLocalLastUpdate(localLastUpdate)
+            
+            //remove deleted
+            for p in posts {
+                if p.isDeletedFlag {
+                    p.delete()
+                }
+            }
+            
+            //update the local DB
+            if(posts.count > 0){
+                posts[0].save()
+            }
+            
+            //read all posts from local DB
+            //retrun the list to the caller
+            Post.getAll(callback: callback)
         }
-        
-        //update the local DB
-        
-        //update the local last update date
-        
-        //read all posts from local DB
-        //retrun the list to the caller
-        
-        
     }
     
     func add(post:Post, callback:@escaping ()->Void){
-        modelFirebase.add(post: post){
-            //notify the post list data change
-        callback()
+        modelFirebase.add(post: post, callback: callback)
         self.notificationPostList.post()
-        }
     }
     
-    func delete(post:Post){
-        modelFirebase.delete(post: post){
-            //notify the post list data change
-            sleep(5)
-            self.notificationPostList.post()
+    func delete(post:Post, callback:@escaping ()->Void){
+        post.isDeletedFlag = true
+        modelFirebase.update(post: post){
+            self.modelFirebase.delete(post: post, callback: callback)
         }
     }
     

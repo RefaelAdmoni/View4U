@@ -10,12 +10,14 @@ import UIKit
 class AddReviewViewController: UIViewController,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
   
+    @IBOutlet weak var spinerActivity: UIActivityIndicatorView!
     @IBOutlet weak var placeName: UITextField!
     @IBOutlet weak var desc: UITextView!
     @IBOutlet weak var location: UITextField!
     @IBOutlet weak var imageView: UIImageView!
     //TODO: add recommender
     
+    var refreshControl = UIRefreshControl()
     var image: UIImage?
     
     override func viewDidLoad() {
@@ -23,9 +25,6 @@ class AddReviewViewController: UIViewController,UIImagePickerControllerDelegate 
 
         // Do any additional setup after loading the view.
     }
-    
-    
-    
     
 
     @IBAction func save(_ sender: Any) {
@@ -40,12 +39,13 @@ class AddReviewViewController: UIViewController,UIImagePickerControllerDelegate 
     }
     
     func savePost(url: String){
+        self.spinerActivity.startAnimating()
         let post = Post.create(name: placeName.text!, location: location.text!, description: desc.text!, imgUrl: url, recommender: "Rafiii...")
-        
+
         Model.instance.add(post: post){
-            self.navigationController?.popViewController(animated: true)
+            self.spinerActivity.stopAnimating()
+            self.dismiss(animated: true, completion: nil)
         }
-//        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func close(_ sender: Any) {
@@ -78,6 +78,5 @@ class AddReviewViewController: UIViewController,UIImagePickerControllerDelegate 
         self.imageView.image = image
         self.dismiss(animated: true, completion: nil)
     }
-    
-    
+
 }

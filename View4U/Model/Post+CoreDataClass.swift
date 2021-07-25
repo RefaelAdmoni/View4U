@@ -22,8 +22,10 @@ public class Post: NSManagedObject {
         post.location = location
         post.descriptionPlace = description
         post.imageUrl = imgUrl
+        post.lastUpdated = lastUpdated
         post.recommenderId = recommender
-        post.date = Date()
+//        post.date = Date()
+        post.isDeletedFlag = false
         
         
         return post
@@ -39,11 +41,17 @@ public class Post: NSManagedObject {
         post.descriptionPlace = json["descriptionPlace"] as? String
         post.imageUrl = json["imgUrl"] as? String
         post.recommenderId = json["recommenderId"] as? String
-        post.lastUpdated = 0
+//        post.lastUpdated = 0
         if let timestamp = json["lastUpdated"] as? Timestamp {
             post.lastUpdated = timestamp.seconds
         }
-        post.date = json["date"] as? Date
+//        if let date = json["date"] as? Timestamp {
+//            post.date = date.dateValue()
+//        }
+        post.isDeletedFlag = false
+        if let df = json["isDeletedFlag"] as? Bool {
+            post.isDeletedFlag = df
+        }
         
         return post
     }
@@ -53,7 +61,7 @@ public class Post: NSManagedObject {
         json["placeName"] = placeName!
         json["location"] = location!
         json["descriptionPlace"] = descriptionPlace!
-        json["date"] = date!
+//        json["date"] = date!
         json["recommenderId"] = recommenderId!
         json["id"] = id!
         if let imageUrl = imageUrl{
@@ -62,6 +70,7 @@ public class Post: NSManagedObject {
             json["imageUrl"] = ""
         }
         json["lastUpdated"] = FieldValue.serverTimestamp()
+        json["isDeletedFlag"] = isDeletedFlag
         
         return json
     }
@@ -74,7 +83,8 @@ extension Post{
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let request = Post.fetchRequest() as NSFetchRequest<Post>
         
-        request.sortDescriptors = [NSSortDescriptor(key: "date",ascending: false)]
+        request.predicate = NSPredicate(format: "isDeletedFlag == false")
+        request.sortDescriptors = [NSSortDescriptor(key: "lastUpdated",ascending: false)]
         
         DispatchQueue.global().async {
             //second thread code
@@ -93,6 +103,7 @@ extension Post{
         
     func save(){
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         do{
             try context.save()
         }catch{    }
@@ -106,11 +117,11 @@ extension Post{
         }catch{    }
     }
     
-    static func getPost(byName: String)->Post?{
+    static func getPost(byId: String)->Post?{
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         
         let request = Post.fetchRequest() as NSFetchRequest<Post>
-        request.predicate = NSPredicate(format: "name == \(byName)")
+        request.predicate = NSPredicate(format: "id == \(byId)")
         do{
             let posts = try context.fetch(request)
             if posts.count > 0 {
@@ -122,7 +133,7 @@ extension Post{
     }
     
     
-    static func setLocalLastUpdate(localLastUpdate:Int64){
+    static func setLocalLastUpdate(_ localLastUpdate:Int64){
         UserDefaults.standard.setValue(localLastUpdate, forKey: "PostsLastUpdateDate")
     }
     static func getLocalLastUpdate()->Int64{

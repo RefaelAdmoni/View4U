@@ -21,7 +21,9 @@ class ModelFirebase {
 
     func getAllPosts(since:Int64, callback:@escaping ([Post])->Void) {
         let db = Firestore.firestore()
-        db.collection("posts").getDocuments { snapshot, error in
+        db.collection("posts")
+            .whereField("lastUpdated", isGreaterThan: Timestamp(seconds: since, nanoseconds: 0))
+            .getDocuments { snapshot, error in
         if let err = error {
             print("Error reading document: \(err)")
         }else{
@@ -41,11 +43,8 @@ class ModelFirebase {
         }
     }
     
-    
     func add(post:Post, callback:@escaping ()->Void){
         let db = Firestore.firestore()
-        
-        print(post)
         
         let docId =  db.collection("posts").document().documentID
         post.id = docId
@@ -55,9 +54,26 @@ class ModelFirebase {
             if let err = err {
                 print("Error writing document: \(err)")
             }else{
-                print("Document successfully written!")
+                print("Document successfully written in FB !")
             }
-        callback()
+            callback()
+        }
+    }
+    
+    func update(post:Post, callback:@escaping ()->Void){
+        let db = Firestore.firestore()
+        
+        let docId =  db.collection("posts").document(post.id!).documentID
+        post.id = docId
+        db.collection("posts").document(docId).setData(post.toJson()){
+            //callback...
+            err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            }else{
+                print("Document successfully written in FB !")
+            }
+            callback()
         }
     }
     
@@ -67,7 +83,7 @@ class ModelFirebase {
             err in if let err = err {
                 print("Error writing document: \(err)")
             }else{
-                print("Document successfully Deleted !")
+                print("Document successfully Deleted from Firebase!")
             }
         callback()
         }

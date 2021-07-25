@@ -100,9 +100,9 @@ extension PostsListViewController: UITableViewDataSource{
 //        cell.postImg = post.imageUrl
         cell.location.text = post.location
         cell.recommender.text = post.recommenderId
-        cell.publishedDate.text = stringFromDate(post.date ?? Date() )
+//        cell.publishedDate.text = post.lastUpdated //stringFromDate(post.date ?? Date() )
         
-        print(stringFromDate(post.date ?? Date()))
+//        print(stringFromDate(post.date ?? Date()))
         return cell
     }
     
@@ -146,11 +146,11 @@ extension PostsListViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let post = postData[indexPath.row]
-            Model.instance.delete(post: post)
-            postData.remove(at: indexPath.row)
-            
-            //Delete the row from the database
-            postsTableView.deleteRows(at: [indexPath], with: .fade)
+            Model.instance.delete(post: post){
+                self.postData.remove(at: indexPath.row)
+                //Delete the row from the database
+                self.postsTableView.deleteRows(at: [indexPath], with: .fade)
+            }
         } else if editingStyle == .insert {
             //Create a new instance of the appropriate class, insert it into the arry, and add a new row to the table view
             
