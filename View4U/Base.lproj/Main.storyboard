@@ -160,6 +160,13 @@
                                 <color key="tintColor" systemColor="systemOrangeColor"/>
                                 <color key="color" systemColor="systemRedColor"/>
                             </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8gc-2r-nZn">
+                                <rect key="frame" x="20" y="565" width="374" height="65"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <color key="textColor" red="0.66475022009999996" green="0.0" blue="0.0" alpha="0.84705882349999995" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="lfX-kJ-4md"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -170,6 +177,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="JU9-YM-j7s"/>
                     <connections>
+                        <outlet property="errorLabel" destination="8gc-2r-nZn" id="KvE-4L-7sa"/>
                         <outlet property="imageView" destination="9mU-rx-ZUe" id="n7i-eN-jNJ"/>
                         <outlet property="spinerActivity" destination="zvs-VK-exK" id="QbM-kJ-h5w"/>
                         <outlet property="userEmail" destination="bpy-gX-zuM" id="wPX-w0-kp6"/>

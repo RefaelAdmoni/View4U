@@ -15,10 +15,13 @@ class RegisterViewController: UIViewController,UIImagePickerControllerDelegate &
     @IBOutlet weak var userEmail: UITextField!
     @IBOutlet weak var userPassword: UITextField!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var errorLabel: UILabel!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        errorLabel.text = ""
       
         // Do any additional setup after loading the view.
     }
@@ -28,17 +31,21 @@ class RegisterViewController: UIViewController,UIImagePickerControllerDelegate &
     @IBAction func register(_ sender: Any) {
         if (userName.text!.count <= 0){
             print("Must enter a user name")
+            self.errorLabel.text = "Must enter a user name"
             return
         }
         if (userEmail.text!.count <= 0){
             print("Must enter a user email")
+            self.errorLabel.text = "Must enter a user email"
             return
         }
         if (userPassword.text!.count <= 7){
             print("Must enter more then 7 character in password")
+            self.errorLabel.text = "Must enter more then 7 character in password"
             return
         }
-
+        
+        self.errorLabel.text = ""
         self.spinerActivity.startAnimating()
         if let image = image{
             Model.instance.saveImage(image: image, type:"USER") { (url) in

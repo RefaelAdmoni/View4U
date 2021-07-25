@@ -41,6 +41,7 @@ class Model{
     func create(user:User, password:String, callback:@escaping ()->Void){
         modelFirebase.create(user:user, password:password){
             //notify the post list data change
+            callback()
         }
     }
     func signin(email:String, password:String, callback:@escaping ()->Void){
