@@ -35,9 +35,9 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         if let image = image{
             Model.instance.saveImage(image: image, type:"USER") { (url) in
                 self.user.imageUrl = url
-                Model.instance.add(user: self.user){
-                    
-                }
+//                Model.instance.add(user: self.user){
+//
+//                }
             }
         }else{
             

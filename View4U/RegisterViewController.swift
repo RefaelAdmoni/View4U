@@ -10,6 +10,7 @@ import UIKit
 class RegisterViewController: UIViewController,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     var image: UIImage?
     
+    @IBOutlet weak var spinerActivity: UIActivityIndicatorView!
     @IBOutlet weak var userName: UITextField!
     @IBOutlet weak var userEmail: UITextField!
     @IBOutlet weak var userPassword: UITextField!
@@ -25,6 +26,20 @@ class RegisterViewController: UIViewController,UIImagePickerControllerDelegate &
 
     
     @IBAction func register(_ sender: Any) {
+        if (userName.text!.count <= 0){
+            print("Must enter a user name")
+            return
+        }
+        if (userEmail.text!.count <= 0){
+            print("Must enter a user email")
+            return
+        }
+        if (userPassword.text!.count <= 7){
+            print("Must enter more then 7 character in password")
+            return
+        }
+
+        self.spinerActivity.startAnimating()
         if let image = image{
             Model.instance.saveImage(image: image, type:"USER") { (url) in
                 self.saveNewUser(url: url)
@@ -38,8 +53,10 @@ class RegisterViewController: UIViewController,UIImagePickerControllerDelegate &
     func saveNewUser(url: String){
         let user = User.create(name: userName.text!, email: userEmail.text!, imgUrl: url)
         
-        Model.instance.add(user: user){
-            self.navigationController?.popViewController(animated: true)
+        Model.instance.create(user: user, password: userPassword.text!){
+            self.spinerActivity.stopAnimating()
+            sleep(3)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     

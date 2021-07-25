@@ -117,49 +117,44 @@ class ModelFirebase {
     
 //~~~~ User ~~~//
     
-    func getAllUsers(callback:@escaping ([User])->Void) {
+    func create(user:User, password:String, callback:@escaping ()->Void){
         let db = Firestore.firestore()
-        db.collection("users").getDocuments { snapshot, error in
-        if let err = error {
-            print("Error reading document: \(err)")
-        }else{
-            if let snapshot = snapshot{
-                var users = [User]()
-                for snap in snapshot.documents{
-                    if let p = User.create(json:snap.data()){
-                    users.append(p)
-                    }
-                }
-                callback(users)
-                return
+        Auth.auth().createUser(withEmail: user.email!, password: password){
+            (authDataResult:AuthDataResult?, error:Error?) in
+            if error != nil {
+                print("the user \(user.email!) unsuccess to register... ")
+                callback()
+            }else{
+                print("the user \(user.email!) is register SUCCESSFULLY... ")
+                callback()
+                
             }
-            }
-            callback([User]())
+            
+            
         }
-    }
-    
-    
-    func add(user:User, callback:@escaping ()->Void){
-        let db = Firestore.firestore()
+        
         db.collection("users").document().setData(user.toJson()){
             //callback...
             err in
             if let err = err {
-                print("Error writing document: \(err)")
+                print("Error writing a new user: \(err)")
             }else{
-                print("Document successfully written!")
+                print("New user successfully written!")
             }
-         callback()
         }
     }
     
-    func delete(user:User, callback:@escaping ()->Void){
+    func signin(email:String, password:String, callback:@escaping ()->Void){
+        
+    }
+    
+    func signout(user:User, callback:@escaping ()->Void){
         let db = Firestore.firestore()
         db.collection("users").document(user.id!).delete() {
             err in if let err = err {
-                print("Error removing document: \(err)")
+                print("Error to signout: \(err)")
             } else {
-                print("Document SUCCESSFULLY removed ! ")
+                print("The user signout SUCCESSFULLY ! ")
             }
         callback()
         }

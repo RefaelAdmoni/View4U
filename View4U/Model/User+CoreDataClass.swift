@@ -34,7 +34,7 @@ public class User: NSManagedObject {
     
     func toJson()->[String:Any]{
         var json = [String:Any]()
-        json["id"] = id!
+
         json["name"] = name!
         json["email"] = email!
         
@@ -50,32 +50,38 @@ public class User: NSManagedObject {
 
 
 extension User{
-    
-    static func getAll()->[User]{
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        do{
-            let users = try context.fetch(User.fetchRequest()) as! [User]
+    func createUser(password:String){
+        Model.instance.create(user:self, password:password){
             
-            return users
-       
-        } catch {    return [User]()    }
-    }
-    
-    func save(){
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        do{
-            try context.save()
-        }catch{    }
-    }
-    
-    func delete(){
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        context.delete(self)
-        do{
-            try context.save()
-        }catch{    }
+        }
         
     }
+    
+//    static func getAll()->[User]{
+//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//        do{
+//            let users = try context.fetch(User.fetchRequest()) as! [User]
+//
+//            return users
+//
+//        } catch {    return [User]()    }
+//    }
+    
+//    func save(){
+//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//        do{
+//            try context.save()
+//        }catch{    }
+//    }
+    
+//    func delete(){
+//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//        context.delete(self)
+//        do{
+//            try context.save()
+//        }catch{    }
+//        
+//    }
     
     
     static func getUser(byName: String)->User?{

@@ -36,23 +36,22 @@ class Model{
     let modelFirebase = ModelFirebase()
     
     
-    //user..
-    func getAllUsers(callback:@escaping ([User])->Void){
-        modelFirebase.getAllUsers(callback: callback)
-    }
+//~~~~ user ~~~~
     
-    func add(user:User, callback:@escaping ()->Void){
-        modelFirebase.add(user: user){
+    func create(user:User, password:String, callback:@escaping ()->Void){
+        modelFirebase.create(user:user, password:password){
             //notify the post list data change
-            self.notificationPostList.post()
         }
     }
+    func signin(email:String, password:String, callback:@escaping ()->Void){
+        modelFirebase.signin(email:email, password:password, callback:callback)
+    }
     
-    func delete(user:User){
-        modelFirebase.delete(user: user){
+    func signout(user:User){
+//        modelFirebase.delete(user: user){
             //notify the post list data change
             self.notificationPostList.post()
-        }
+        
     }
     
     func getUser(byId: String)->User?{
@@ -60,7 +59,7 @@ class Model{
     }
     
     
-    
+
     
     
     
@@ -127,6 +126,6 @@ class Model{
         ModelFirebase.saveImage(image: image, type: type, callback: callback)
     }
     
-    
+
     
 }
