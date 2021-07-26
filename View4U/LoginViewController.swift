@@ -6,13 +6,21 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
 
+    @IBOutlet weak var spinerActivity: UIActivityIndicatorView!
+    @IBOutlet weak var emailUser: UITextField!
+    @IBOutlet weak var passwordUser: UITextField!
+    @IBOutlet weak var errorLabel: UILabel!
+    
+ 
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        errorLabel.text = ""
     }
     
 
@@ -40,6 +48,54 @@ class LoginViewController: UIViewController {
     
     @IBAction func Login(_ sender: Any) {
         
+        if (emailUser.text!.count <= 0){
+            print("Must enter a user email")
+            self.errorLabel.text = "Must enter a user email"
+            return
+        }
+        if (passwordUser.text!.count <= 0){
+            print("Must enter a user password")
+            self.errorLabel.text = "Must enter a user password"
+            return
+        }
+        errorLabel.text = ""
+        self.spinerActivity.startAnimating()
+        
+        let email = emailUser.text!
+        let password = passwordUser.text!
+        
+        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+            if error != nil {
+                //couldn't sign in
+                self.errorLabel.text = " Cannot sign in ! "
+                self.spinerActivity.stopAnimating()
+            }
+            else{
+                print("you're signed in ! ")
+                self.dismiss(animated: true, completion: nil)
+
+//                let homeViewController = self.storyboard?.instantiateViewController(identifier: "HomePageVC") as? PostsListViewController
+//
+//                self.view.window?.rootViewController = homeViewController
+//                self.view.window?.makeKeyAndVisible()
+            }
+        }
+        
+        
+        
+        
+        
+        
+//        Model.instance.signin(email: email, password: password){
+//
+//
+//            self.spinerActivity.stopAnimating()
+//
+//
+//
+//            sleep(3)
+//            self.dismiss(animated: true, completion: nil)
+//        }
     }
     
     @IBAction func goBack(_ sender: Any) {

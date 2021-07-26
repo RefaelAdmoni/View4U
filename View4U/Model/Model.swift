@@ -29,6 +29,9 @@ class NotificationGeneral{
 class Model{
     static let instance = Model()
     
+    var logedIn:Bool = false
+    var logedIn_emailUser:String = ""
+    
     private init(){}
     
     public let notificationPostList = NotificationGeneral("notificationPostList")
@@ -38,11 +41,12 @@ class Model{
     
 //~~~~ user ~~~~
     
-    func create(user:User, password:String, callback:@escaping ()->Void){
-        modelFirebase.create(user:user, password:password){
-            //notify the post list data change
+    func create(user:User/*, password:String*/, callback:@escaping ()->Void){
+        modelFirebase.create(user:user){
             callback()
         }
+        callback()
+        
     }
     func signin(email:String, password:String, callback:@escaping ()->Void){
         modelFirebase.signin(email:email, password:password, callback:callback)
@@ -97,6 +101,40 @@ class Model{
             //read all posts from local DB
             //retrun the list to the caller
             Post.getAll(callback: callback)
+        }
+    }
+    func getAllPostsForCurrentUser(email:String, callback:@escaping ([Post])->Void) {
+        //get the local update date
+        var localLastUpdate = Post.getLocalLastUpdate()
+        
+        //get updates from firebase
+        modelFirebase.getAllPosts(since: localLastUpdate){ (posts) in
+
+            
+            //update the local last update date
+            for p in posts{
+                print("post last updated = \(p.lastUpdated)")
+                if (p.lastUpdated > localLastUpdate){
+                    localLastUpdate = p.lastUpdated
+                }
+            }
+            Post.setLocalLastUpdate(localLastUpdate)
+            
+            //remove deleted
+            for p in posts {
+                if p.isDeletedFlag {
+                    p.delete()
+                }
+            }
+            
+            //update the local DB
+            if(posts.count > 0){
+                posts[0].save()
+            }
+            
+            //read all posts from local DB
+            //retrun the list to the caller
+            Post.getAllByUser(email:email, callback: callback)
         }
     }
     

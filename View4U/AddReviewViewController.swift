@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class AddReviewViewController: UIViewController,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
@@ -19,10 +20,13 @@ class AddReviewViewController: UIViewController,UIImagePickerControllerDelegate 
     
     var refreshControl = UIRefreshControl()
     var image: UIImage?
+    var user:FirebaseAuth.User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        user = Auth.auth().currentUser!
+        
         // Do any additional setup after loading the view.
     }
     
@@ -40,7 +44,7 @@ class AddReviewViewController: UIViewController,UIImagePickerControllerDelegate 
     
     func savePost(url: String){
         self.spinerActivity.startAnimating()
-        let post = Post.create(name: placeName.text!, location: location.text!, description: desc.text!, imgUrl: url, recommender: "Rafiii...")
+        let post = Post.create(name: placeName.text!, location: location.text!, description: desc.text!, imageUrl: url, recommender: (user?.email!)!)
 
         Model.instance.add(post: post){
             self.spinerActivity.stopAnimating()

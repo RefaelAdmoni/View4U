@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class DetailsPlaceViewController: UIViewController {
 
@@ -24,10 +25,10 @@ class DetailsPlaceViewController: UIViewController {
             }
         }
     }
-    var myImg:UIImage?{
+    var myImg: String = ""{
         didSet{
-            if (imagePlace != nil){
-                imagePlace.image = myImg
+            if (imagePlace != nil && myImg != ""){
+                imagePlace.kf.setImage(with: URL(string: myImg))
             }
         }
     }

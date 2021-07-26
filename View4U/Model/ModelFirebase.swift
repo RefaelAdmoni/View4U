@@ -117,21 +117,21 @@ class ModelFirebase {
     
 //~~~~ User ~~~//
     
-    func create(user:User, password:String, callback:@escaping ()->Void){
+    func create(user:User/*, password:String*/, callback:@escaping ()->Void){
         let db = Firestore.firestore()
-        Auth.auth().createUser(withEmail: user.email!, password: password){
-            (authDataResult:AuthDataResult?, error:Error?) in
-            if error != nil {
-                print("the user \(user.email!) unsuccess to register... ")
-                callback()
-            }else{
-                print("the user \(user.email!) is register SUCCESSFULLY... ")
-                callback()
-                
-            }
-            
-            
-        }
+//        Auth.auth().createUser(withEmail: user.email!, password: password){
+//            (authDataResult:AuthDataResult?, error:Error?) in
+//            if error != nil {
+//                print("the user \(user.email!) unsuccess to register... ")
+//                callback()
+//            }else{
+//                print("the user \(user.email!) is register SUCCESSFULLY... ")
+//                callback()
+//
+//            }
+//
+//
+//        }
         
         db.collection("users").document().setData(user.toJson()){
             //callback...
@@ -145,19 +145,26 @@ class ModelFirebase {
     }
     
     func signin(email:String, password:String, callback:@escaping ()->Void){
-        
+        Auth.auth().signIn(withEmail: email, password: password, completion: { (authResult, error) in
+            if (authResult != nil){
+                Model.instance.logedIn = true
+                UserDefaults.standard.set(Auth.auth().currentUser!.uid,forKey: "userUIDkey")
+                UserDefaults.standard.synchronize()
+                
+                print("\(authResult!.user) signed in SUCESSFULLY ! ")
+                callback()
+            
+            }else {
+                print("Error to sign in : \(error!) ")
+                
+                callback()
+            }
+             })
     }
     
     func signout(user:User, callback:@escaping ()->Void){
-        let db = Firestore.firestore()
-        db.collection("users").document(user.id!).delete() {
-            err in if let err = err {
-                print("Error to signout: \(err)")
-            } else {
-                print("The user signout SUCCESSFULLY ! ")
-            }
-        callback()
-        }
+        Model.instance.logedIn = false
+        
     }
     
     func getUser(byId: String)->User?{

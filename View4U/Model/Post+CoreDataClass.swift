@@ -15,16 +15,16 @@ import FirebaseFirestore
 @objc(Post)
 public class Post: NSManagedObject {
 
-    static func create(name:String, location:String, description:String, imgUrl:String, recommender:String, lastUpdated:Int64 = 0) -> Post{
+    static func create(name:String, location:String, description:String, imageUrl:String, recommender:String, lastUpdated:Int64 = 0) -> Post{
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let post = Post(context: context)
         post.placeName = name
         post.location = location
         post.descriptionPlace = description
-        post.imageUrl = imgUrl
+        post.imageUrl = imageUrl
         post.lastUpdated = lastUpdated
         post.recommenderId = recommender
-//        post.date = Date()
+
         post.isDeletedFlag = false
         
         
@@ -39,15 +39,13 @@ public class Post: NSManagedObject {
         post.placeName = json["placeName"] as? String
         post.location = json["location"] as? String
         post.descriptionPlace = json["descriptionPlace"] as? String
-        post.imageUrl = json["imgUrl"] as? String
+        post.imageUrl = json["imageUrl"] as? String
         post.recommenderId = json["recommenderId"] as? String
 //        post.lastUpdated = 0
         if let timestamp = json["lastUpdated"] as? Timestamp {
             post.lastUpdated = timestamp.seconds
         }
-//        if let date = json["date"] as? Timestamp {
-//            post.date = date.dateValue()
-//        }
+
         post.isDeletedFlag = false
         if let df = json["isDeletedFlag"] as? Bool {
             post.isDeletedFlag = df
@@ -83,6 +81,26 @@ extension Post{
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let request = Post.fetchRequest() as NSFetchRequest<Post>
         
+        request.predicate = NSPredicate(format: "isDeletedFlag == false")
+        request.sortDescriptors = [NSSortDescriptor(key: "lastUpdated",ascending: false)]
+        
+        DispatchQueue.global().async {
+            //second thread code
+            var data = [Post]()
+            do{
+                data = try context.fetch(request)
+            } catch {  }
+            
+            DispatchQueue.main.async {
+                //code to execute on main thread
+                callback(data)
+            }
+        }
+    }
+    
+    static func getAllByUser(email:String, callback:@escaping ([Post])->Void) {
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let request = Post.fetchRequest() as NSFetchRequest<Post>
         request.predicate = NSPredicate(format: "isDeletedFlag == false")
         request.sortDescriptors = [NSSortDescriptor(key: "lastUpdated",ascending: false)]
         

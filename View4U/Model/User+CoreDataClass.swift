@@ -13,12 +13,22 @@ import CoreData
 @objc(User)
 public class User: NSManagedObject {
 
-    static func create(name:String, email:String, imgUrl:String) -> User{
+    static func create(name:String, email:String, imageUrl:String) -> User{
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let user = User(context: context)
         user.name = name
         user.email = email
-        user.imageUrl = imgUrl
+        user.imageUrl = imageUrl
+        
+        return user
+    }
+    static func create(name:String, email:String, imageUrl:String, id:String) -> User{
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let user = User(context: context)
+        user.name = name
+        user.email = email
+        user.imageUrl = imageUrl
+        user.id = id
         
         return user
     }
@@ -27,7 +37,8 @@ public class User: NSManagedObject {
         let user = User()
         user.name = json["name"] as? String
         user.email = json["email"] as? String
-        user.imageUrl = json["imgUrl"] as? String
+        user.imageUrl = json["imageUrl"] as? String
+        user.id = json["id"] as? String
         
         return user
     }
@@ -37,7 +48,7 @@ public class User: NSManagedObject {
 
         json["name"] = name!
         json["email"] = email!
-        
+        json["id"] = id!
         if let imageUrl = imageUrl{
             json["imageUrl"] = imageUrl
         }else{
@@ -50,52 +61,14 @@ public class User: NSManagedObject {
 
 
 extension User{
-    func createUser(password:String){
-        Model.instance.create(user:self, password:password){
-            
-        }
+    func createUser(name: String, email: String, imageUrl: String, id:String)->User{
         
-    }
-    
-//    static func getAll()->[User]{
-//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//        do{
-//            let users = try context.fetch(User.fetchRequest()) as! [User]
-//
-//            return users
-//
-//        } catch {    return [User]()    }
-//    }
-    
-//    func save(){
-//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//        do{
-//            try context.save()
-//        }catch{    }
-//    }
-    
-//    func delete(){
-//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//        context.delete(self)
-//        do{
-//            try context.save()
-//        }catch{    }
-//        
-//    }
-    
-    
-    static func getUser(byName: String)->User?{
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let user = User()
+        user.name = name
+        user.email = email
+        user.imageUrl = imageUrl
+        user.id = id
         
-        let request = User.fetchRequest() as NSFetchRequest<User>
-        request.predicate = NSPredicate(format: "name == \(byName)")
-        do{
-            let users = try context.fetch(request)
-            if users.count > 0 {
-                return users[0]
-            }
-        }catch{    }
-        
-        return nil
+        return user
     }
 }

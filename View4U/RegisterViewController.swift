@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class RegisterViewController: UIViewController,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     var image: UIImage?
@@ -58,13 +59,52 @@ class RegisterViewController: UIViewController,UIImagePickerControllerDelegate &
     }
     
     func saveNewUser(url: String){
-        let user = User.create(name: userName.text!, email: userEmail.text!, imgUrl: url)
         
-        Model.instance.create(user: user, password: userPassword.text!){
-            self.spinerActivity.stopAnimating()
-            sleep(3)
-            self.dismiss(animated: true, completion: nil)
+        Auth.auth().createUser(withEmail: userEmail.text!, password: userPassword.text!) { (result, err) in
+            
+            //check for errors
+            if err != nil {
+                //there was an error creating the user
+                print("Error creating user ! ")
+                self.errorLabel.text = "Error creating user ! "
+                self.spinerActivity.stopAnimating()
+            }else {
+                //User was created successfully...
+                let user = User.create(name: self.userName.text!, email: self.userEmail.text!, imageUrl: url, id:result!.user.uid)
+//                let user = User()
+//                user.email = userEmail.text!
+//                user.imageUrl = url
+//                user.name = self.userName.text!
+//                user.id = result!.user.uid
+                Model.instance.create(user: user){
+                    self.spinerActivity.stopAnimating()
+                    sleep(3)
+                    self.transitionToHomePage()
+//                    self.dismiss(animated: true, completion: nil)
+                }
+            }
+            
+            
         }
+        
+        
+//        let user = User.create(name: userName.text!, email: userEmail.text!, imgUrl: url)
+//
+//        Model.instance.create(user: user, password: userPassword.text!){
+//            self.spinerActivity.stopAnimating()
+//            sleep(3)
+//            self.dismiss(animated: true, completion: nil)
+//        }
+  
+    }
+    
+    func transitionToHomePage(){
+        self.dismiss(animated: true, completion: nil)
+        
+//        let homeViewController = storyboard?.instantiateViewController(identifier: "HomeVC") as? PostsListViewController
+//
+//        view.window?.rootViewController = homeViewController
+//        view.window?.makeKeyAndVisible()
     }
     
     
